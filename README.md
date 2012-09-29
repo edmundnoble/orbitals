@@ -1,0 +1,4 @@
+orbitals
+========
+
+Electron configuration calculator.
