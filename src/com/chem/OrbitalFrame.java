@@ -90,9 +90,8 @@ public class OrbitalFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
-		initPeriodicTable();
-		EventQueue.invokeLater(new Runnable() {
 
+		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
 					OrbitalFrame frame = new OrbitalFrame();
@@ -102,6 +101,7 @@ public class OrbitalFrame extends JFrame {
 				}
 			}
 		});
+		initPeriodicTable();
 	}
 
 	private JPanel contentPane;
@@ -124,7 +124,7 @@ public class OrbitalFrame extends JFrame {
 		contentPane.setLayout(null);
 
 		JLabel lblElementNamenumber = new JLabel("Element symbol/number:");
-		lblElementNamenumber.setBounds(94, 77, 165, 23);
+		lblElementNamenumber.setBounds(70, 76, 194, 23);
 		contentPane.add(lblElementNamenumber);
 
 		textField = new JTextField();
@@ -145,7 +145,7 @@ public class OrbitalFrame extends JFrame {
 				calculateOrbitals();
 			}
 		});
-		btnNewButton.setBounds(131, 178, 89, 23);
+		btnNewButton.setBounds(97, 178, 108, 23);
 		contentPane.add(btnNewButton);
 
 		JButton btnNewButton_1 = new JButton("Exit");
@@ -164,7 +164,7 @@ public class OrbitalFrame extends JFrame {
 				144, 255));
 		lblElectronConfigurationCalculator.setFont(new Font("Tahoma",
 				Font.BOLD, 18));
-		lblElectronConfigurationCalculator.setBounds(90, 11, 301, 46);
+		lblElectronConfigurationCalculator.setBounds(76, 18, 347, 46);
 		contentPane.add(lblElectronConfigurationCalculator);
 	}
 
@@ -182,44 +182,45 @@ public class OrbitalFrame extends JFrame {
 			return;
 		}
 		String configuration = "";
+		int[] s = new int[atomicNum], p = new int[atomicNum], d = new int[atomicNum], f = new int[atomicNum];
 		for (int level = 1; atomicNum > 0; level++) {
-			int s = 0, p = 0, d = 0, f = 0, g = 0;
 			int delta = (Math.min(2, atomicNum));
-			s = delta;
-			atomicNum -= s;
+			s[level] = delta;
+			atomicNum -= delta;
 			if (level >= 6) {
 				delta = (Math.min(14, atomicNum));
-				f = delta;
+				f[level - 2] = delta;
 				atomicNum -= delta;
 			}
 			if (level >= 4 || atomicNum <= 0) {
 				delta = Math.min(10, atomicNum);
 				if (delta == 4 || delta == 9) {
 					delta++;
-					s--;
+					s[level]--;
 				}
-				d += delta;
+				d[level - 1] += delta;
 				atomicNum -= delta;
 			}
 			if ((level >= 2 || atomicNum <= 0)) {
 				delta = Math.min(6, atomicNum);
-				p += delta;
+				p[level] += delta;
 				atomicNum -= delta;
 			}
 
-			configuration += (level + "s" + superscript(s) + "");
-			if (f > 0) {
-				configuration += ((level - 2) + "f" + superscript(f) + "");
-			}
-			if (d > 0) {
-				configuration += ((level - 1) + "d" + superscript(d) + "");
-			}
-			if (p > 0) {
-				configuration += (level + "p" + superscript(p) + "");
-			}
 
 		}
-
+for (int level = 1; s[level] != 0; level++) {
+		configuration += (level + "s" + superscript(s[level]) + "");
+		if (p[level] > 0) {
+			configuration += (level + "p" + superscript(p[level]) + "");
+		}
+		if (d[level] > 0) {
+			configuration += ((level) + "d" + superscript(d[level]) + "");
+		}
+		if (f[level] > 0) {
+			configuration += ((level) + "f" + superscript(f[level]) + "");
+		}
+		}
 		textPane.setText(configuration);
 	}
 
